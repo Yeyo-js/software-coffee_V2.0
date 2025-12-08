@@ -1,0 +1,57 @@
+function Link({
+  href, 
+  onClick, 
+  className = '', 
+  variant = 'default',
+  text, 
+  children
+}) {
+
+  const variants = {
+    default: `
+      hover:text-blue-800 
+      hover:underline 
+      transition-colors
+    `,
+    primary: `
+      px-6 sm:px-8 md:px-10 
+      py-3 md:py-3.5 
+      bg-gradient-to-br from-white to-[#0E4051]
+      text-black font-semibold 
+      rounded-lg 
+      hover:from-[#725800] hover:to-white
+      transition-all duration-300 
+      hover:-translate-y-[3px]
+      text-center 
+      shadow-lg hover:shadow-xl 
+      text-sm sm:text-base md:text-lg
+    `,
+    secondary: `flex flex-col items-center 
+      justify-center mt-6 md:mt-8 bg-[#06141F] px-6 md:px-8 
+      lg:px-10 pb-1 rounded-2xl z-100 border-b border-[#FFBB00]
+      `,
+    danger: `flex gap-1 items-end-safe justify-center 
+    `,
+    varFlex : `flex flex-col items-center 
+      justify-centermd:mt-8 px-6 md:px-8 
+      lg:px-10 pb-1  z-100
+      `
+
+  }
+
+
+  return (
+    <a
+      href={href}
+      onClick={onClick}
+      className={`
+        ${className}
+        ${variants[variant] || variants.default}
+      `}
+    >
+      {children || text}
+    </a>
+  );
+}
+
+export { Link };

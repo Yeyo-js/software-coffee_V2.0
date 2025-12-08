@@ -1,0 +1,76 @@
+import { Paragraph } from "../../atoms/paragraph"
+import { Title } from "../../atoms/titles"
+import { BannerBgCurve } from "../../molecules/bannerBgCurve"
+import { BannerButtons } from "../../molecules/home/bannerButtons"
+import { BannerCoffee } from "../../molecules/home/bannerCupCoffe"
+
+function HomeBanner() {
+  const title  = 'BROWN COFFEE'
+  const description = `"Siéntete como en casa. Aquí te esperamos con café recién molido,
+          postres recién horneados y helados irresistibles. Cada visita es una oportunidad
+          para desconectarte y disfrutar del momento. Déjate envolver por el aroma,
+          los sabores y la calidez de nuestro espacio."`
+
+  return (
+    <section 
+      className="
+        relative 
+        h-[70vh]       
+        md:h-[85vh]    
+        lg:h-screen    
+        w-full 
+        overflow-hidden
+      "
+    >
+      {/* Fondo */}
+      <div
+        className="
+          absolute inset-0 
+          bg-cover bg-center bg-no-repeat 
+          transition-all duration-300 
+          sm:bg-position-[center_30%]
+        "
+        style={{ backgroundImage: "url('/HOME_LOGO.jpg')" }}
+      >
+        <div className="absolute inset-0 bg-black/50 md:bg-black/40"></div>
+      </div>
+
+      {/* Contenido */}
+      <article 
+        className="
+          absolute inset-0 
+          flex flex-col 
+          justify-start          
+          sm:justify-center      
+          items-start 
+          px-6 sm:px-8 md:px-12 lg:px-20 xl:px-32 
+          text-white 
+          z-10 
+          pt-24 md:pt-0
+        "
+      >
+        <Title
+          text={title}
+          level="h1"
+          weight="bold"
+          variant="primary"
+          className="text-3xl sm:text-4xl md:text-4xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 md:mb-6"
+        />
+
+        <Paragraph 
+          text={description}
+          size="large"
+          variant="primary"
+          className="max-w-2xl lg:max-w-3xl mb-6 md:mb-8 lg:mb-10 leading-relaxed"
+        />
+
+        <BannerBgCurve design={1}/>
+        <BannerButtons/>
+      </article>
+
+      <BannerCoffee/>
+    </section>
+  )
+}
+
+export { HomeBanner }

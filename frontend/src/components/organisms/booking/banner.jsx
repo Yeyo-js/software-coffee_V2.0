@@ -1,0 +1,34 @@
+import { Article } from "../../molecules/booking/bannerArticle"
+import { BannerCoffee } from "../../molecules/home/bannerCupCoffe"
+
+function Banner() {
+  return (
+    <section className="relative h-[70vh] md:h-[80vh] w-full overflow-hidden">
+
+      {/* Fondo */}
+      <div
+        className="absolute inset-0 bg-no-repeat bg-right bg-cover transition-all duration-300"
+        style={{
+          backgroundImage: "url('/IMG-BOOKING.jpeg')",
+        }}
+      >
+        <div className="absolute inset-0 bg-black/50 md:bg-black/40"></div>
+      </div>
+      <Article />
+      <BannerCoffee
+        src="/CUP-BOOKING.png"
+        alt="imagen de la taza de café"
+        position={`
+          bottom-8 left-10
+          sm:bottom-8 sm:left-30
+          lg:bottom-11 lg:left-48
+          xl:bottom-11 xl:left-58 
+          2xl:bottom-12 2xl:left-72
+          `}
+        className="hover:scale-125 transition-transform duration-500 hover:-rotate-20"
+      />
+    </section>
+  )
+}
+
+export { Banner }
