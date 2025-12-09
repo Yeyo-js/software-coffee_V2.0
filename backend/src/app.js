@@ -17,7 +17,7 @@ app.use(cors());
 
 // Rutas
 app.use('/products', productRoutes);
-app.use('/categories', require('./routes/category.routes'));
+app.use('/categories', categoryRoutes);
 
 // Ruta base
 app.get('/', (req, res) => {
