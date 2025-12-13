@@ -1,5 +1,7 @@
 const { Users } = require('../models')
-
+/* =========================
+  REGISTRO DE CLIENTE
+========================= */
 const clientRegister = async (firstName, lastName, email, phone, birthdate, gender, address, password, repassword) => {
   const newClient = await Users.create({
     firstName,
@@ -10,45 +12,45 @@ const clientRegister = async (firstName, lastName, email, phone, birthdate, gend
     gender,
     address,
     password,
-    repassword,
     role: 'C',
+    isActive: true,
     createdAt: new Date(),
     updatedAt: new Date()
   })
 
   return newClient
 }
-
-const getCredentialsByEmail = async (email) => {
-  const client = await Users.findOne(
-    {
-      where: { email, role: 'C' },
-      attributes: ['idUser', 'email', 'password']
-    }
-  )
-
-  return client
+/* =========================
+  CREDENCIALES (LOGIN)
+========================= */
+  const getUserByEmail = async (email) => {
+  return await Users.findOne({
+    where: { email },
+    attributes: ['idUser', 'email', 'password', 'role', 'isActive']
+  })
 }
 
-const clientIsActive = async (userId, email) => {
-  const isActive = await Users.findOne(
-    {
-      where: { idUser: userId, email, role: 'C' },
-      attributes: ['isActive']
-    })
-  if (!isActive || !isActive.isActive) {
-    return false
-  }
+/* =========================
+  VERIFICAR SI ESTÁ ACTIVO
+========================= */
+const userIsActive = async (userId) => {
+  const user = await Users.findOne({
+    where: { idUser: userId },
+    attributes: ['isActive']
+  })
 
-  return true
+  return !!user?.isActive
 }
 
+/* =========================
+  INFO BÁSICA DEL CLIENTE
+========================= */
 const getClientBasicInfo = async (userId) => {
   const clientBasicInfo = await Users.findOne({
-    where: { idUser: userId, role: 'C' },
+    where: { idUser: userId},
     attributes: ['idUser', 'firstname', 'lastname', 'email', 'birthdate']
   })
   return clientBasicInfo
 }
 
-module.exports = { clientRegister, getCredentialsByEmail, clientIsActive, getClientBasicInfo }
+module.exports = { clientRegister, getUserByEmail, userIsActive, getClientBasicInfo }

@@ -6,7 +6,6 @@ import { ClientValidator } from "../../../validations/validationCredentials"
 
 function ModalRegister({ setRegisterIsOpen }) {
 
-  // ✅ ESTADOS PRIMERO
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
@@ -19,7 +18,6 @@ function ModalRegister({ setRegisterIsOpen }) {
   const [error, setError] = useState('')
   const [closing, setIsClosing] = useState(false)
 
-  // ✅ FORM FIELDS DESPUÉS
   const formFields = [
     {
       htmlFor: 'firstName',
@@ -73,7 +71,7 @@ function ModalRegister({ setRegisterIsOpen }) {
           { text: 'Género', value: '' },
           { text: 'F', value: 'F' },
           { text: 'M', value: 'M' },
-          { text: 'P/D', value: 'P/D' },
+          { text: 'O', value: 'O' },
         ]
       },
       {
@@ -105,7 +103,7 @@ function ModalRegister({ setRegisterIsOpen }) {
 
   const handleClose = () => {
     setIsClosing(true)
-    setTimeout(() => setRegisterIsOpen(false), 400)
+    setTimeout(() => setRegisterIsOpen(false))
   }
 
   const handleBgClick = (e) => {
@@ -118,6 +116,8 @@ function ModalRegister({ setRegisterIsOpen }) {
     e.preventDefault()
 
     try {
+      // 1. Validar datos
+      console.log('Validando datos...')
       await ClientValidator.validateAsync({
         firstName,
         lastName,
@@ -128,9 +128,11 @@ function ModalRegister({ setRegisterIsOpen }) {
         address,
         password,
         repassword,
-        role: 'C'
       })
+      console.log('Validación exitosa')
 
+      // 2. Hacer petición
+      console.log('Enviando petición...')
       const request = await fetch(`http://localhost:3000/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -147,19 +149,27 @@ function ModalRegister({ setRegisterIsOpen }) {
         })
       })
 
-      if (!request.ok) throw new Error('Error al registrar')
+      console.log('Status:', request.status)
+
+      if (!request.ok) {
+        // Intenta obtener más detalles del error
+        const errorData = await request.json().catch(() => ({}))
+        console.error('Error del servidor:', errorData)
+        throw new Error(errorData.message || 'Error al registrar')
+      }
 
       const response = await request.json()
+      console.log('Respuesta:', response)
       alert(response.message)
 
     } catch (error) {
+      console.error('Error completo:', error)
       setError(error.message)
     }
   }
-
   return (
     <div
-      className={`fixed inset-0 bg-black/50 z-998 transition-opacity duration-400 ${closing ? 'opacity-0' : 'opacity-100'}`}
+      className={`fixed inset-0 bg-black/50 z-998 transition-opacity ${closing ? 'opacity-0' : 'opacity-100'}`}
       onClick={handleBgClick}
     >
       <form

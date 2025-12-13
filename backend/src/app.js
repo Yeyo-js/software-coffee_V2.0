@@ -1,9 +1,9 @@
 /* eslint-disable no-undef */
 const dotenv = require('dotenv')
 const express = require('express')
-const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const { sequelize } = require('./models')
+const { globalMiddlewares } = require('./middlewares/globalMiddlewares')
 
 // --- IMPORTACIÓN DE RUTAS ---
 
@@ -22,10 +22,7 @@ const server = express()
 const port = process.env.PORT || 3000
 
 // --- MIDDLEWARES GLOBALES ---
-server.use(express.json())
-server.use(express.urlencoded({ extended: true })) // Necesario para formularios
-server.use(cookieParser()) // Necesario para la autenticación
-server.use(cors()) // Necesario para que el Frontend (React) se conecte
+globalMiddlewares({server: server})
 
 // --- DEFINICIÓN DE RUTAS ---
 
