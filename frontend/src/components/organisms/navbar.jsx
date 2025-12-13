@@ -5,7 +5,7 @@
   import { LoginNavbar } from "../molecules/login";
   import { MobileMenu } from "../molecules/modileMenu";
 
-  function Navbar({ setModalIsOpen, setCartShopOpen }) {
+  function Navbar({ setModalIsOpen, setCartShopOpen, setRegisterIsOpen }) {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleMenu = () => {
@@ -42,6 +42,7 @@
             <LoginNavbar 
               setModalIsOpen={setModalIsOpen} 
               setCartShopOpen={setCartShopOpen}
+              setRegisterIsOpen= {setRegisterIsOpen}
             />
           </div>
 
@@ -56,6 +57,7 @@
         
         <MobileMenu 
           setModalIsOpen={setModalIsOpen}
+          setRegisterIsOpen= {setRegisterIsOpen}
           isOpen={isOpen}
           closeMenu={closeMenu}
           />

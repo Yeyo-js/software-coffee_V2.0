@@ -24,7 +24,7 @@ function FormItem({
                 grid 
                 grid-cols-1 
                 md:grid-cols-2 
-                gap-4 
+                gap-10
                 w-full
               "
             >

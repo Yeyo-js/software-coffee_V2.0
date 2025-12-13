@@ -5,12 +5,12 @@ import { Link } from "../../atoms/links"
 import { FormItem } from "../../molecules/formItem"
 
 
-function ModalLogin({ setModalIsOpen }) {
+function ModalLogin({ setModalIsOpen, setRegisterIsOpen }) {
   const [isClosing, setIsClosing] = useState(false)
-  const [formData, setFormData] = useState({
-    user : '',
-    password : ''
-  })
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  
+
 
   const handleClose = () => {
     setIsClosing(true)
@@ -18,6 +18,15 @@ function ModalLogin({ setModalIsOpen }) {
       setModalIsOpen(false) 
     }, 400)
   }
+
+  const openModalRegister = (e) => {
+    e.preventDefault()
+    setIsClosing(true)
+    setTimeout(() => {
+    setModalIsOpen(false)   
+    setRegisterIsOpen(true)    
+  }, 400)
+}
 
   // Cerrar modal al hacer clic fuera
   const handleBgClick = (e) => {
@@ -37,19 +46,19 @@ function ModalLogin({ setModalIsOpen }) {
       htmlFor :'user',
       type :'text',
       name : 'user',
-      value : formData.user,
+      value : email,
       placeholder:'Tu Usuario',
-      onChange: (e) => setFormData({...formData, user: e.target.value})
+      onChange:{}
     },
     {
       text : 'Contraseña',
       htmlFor :'passwd',
       type :'password',
       name : 'passwd',
-      value : formData.password,
+      value : password,
       placeholder:'Tu contraseña',
-      onChange: (e) => setFormData({...formData, password: e.target.value})
-    },
+      onChange:{}
+    }
   ]
   return (
     <>
@@ -71,7 +80,7 @@ function ModalLogin({ setModalIsOpen }) {
         >
           <Title
             text='Inicia Sesión'
-            level="h2"
+            level="h3"
             align="center"
             variant=""
             weight="bold"
@@ -97,7 +106,8 @@ function ModalLogin({ setModalIsOpen }) {
             <Link
               text={'No tengo cuenta '}
               variant="default"
-              href='#'
+              onClick={openModalRegister}
+              className="cursor-pointer"
             />
           </div>
         </form>

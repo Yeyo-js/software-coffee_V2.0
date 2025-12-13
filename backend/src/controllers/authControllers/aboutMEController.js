@@ -11,7 +11,7 @@ const aboutMeController = async (req, res) => {
     const { idUser } = verifyJWT(authToken)
 
     const userBasicInfo = await getClientBasicInfo(idUser)
-    return req.json({ ...userBasicInfo.dataValues })
+    return res.json({ ...userBasicInfo.dataValues })
   } catch (error) {
     return res.status(401).json({ message: 'No autorizado' })
   }

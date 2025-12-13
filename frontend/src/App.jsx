@@ -11,6 +11,7 @@ import { Navbar } from "./components/organisms/navbar"
 import { useState } from "react"
 import { ModalLogin } from "./components/organisms/modals/modalLogin"
 import { CartShop } from "./components/organisms/modals/modalCartShop"
+import { ModalRegister } from "./components/organisms/modals/modalRegister"
 
 // Tendencies sections
 import { TendenciesCoffee } from "./components/organisms/home/tendenciesCoffee"
@@ -23,6 +24,7 @@ import { WhatsAppButton } from "./components/atoms/WhatsAppButton"
 function App() {
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [cartShopOpen, setCartShopOpen] = useState(false)
+  const [registerIsOpen, setRegisterIsOpen] = useState (false)
 
   const pages = [
     {
@@ -63,11 +65,17 @@ function App() {
 
   return (
     <>
-      <Navbar setModalIsOpen={setModalIsOpen} setCartShopOpen={setCartShopOpen} />
+      <Navbar 
+        setModalIsOpen={setModalIsOpen}
+        setRegisterIsOpen= {setRegisterIsOpen}
+        setCartShopOpen={setCartShopOpen} />
       <MyTemplate>
-        {modalIsOpen ? <ModalLogin setModalIsOpen={setModalIsOpen} /> : ''}
+        {modalIsOpen ? <ModalLogin 
+          setModalIsOpen={setModalIsOpen} 
+          setRegisterIsOpen={setRegisterIsOpen}
+          /> : ''}
         {cartShopOpen ? <CartShop setCartShopOpen={setCartShopOpen} /> : ''}
-
+        {registerIsOpen ? <ModalRegister setRegisterIsOpen={setRegisterIsOpen} /> : ''}
         <Routes>
           {pages.map((page, i) => (
             <Route
@@ -79,7 +87,7 @@ function App() {
                 <Route
                   key={j}
                   path={child.path}
-                  index={child.index} // Importante: pasar el index
+                  index={child.index} 
                   element={child.element}
                 />
               ))}
