@@ -11,24 +11,29 @@ export const LetterPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  const { addToCart } = useCart();
+
+  const { addToCart } = useCart(); // ✅ carrito
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
+
         const [catsData, prodsData] = await Promise.all([
           apiFetch("/categories"),
-          apiFetch("/products")
+          apiFetch("/products"),
         ]);
 
-        const categoriesList = Array.isArray(catsData) ? catsData : (catsData?.data || catsData?.body || []);
+        const categoriesList = Array.isArray(catsData)
+          ? catsData
+          : catsData?.data || catsData?.body || [];
+
+        const productList = Array.isArray(prodsData)
+          ? prodsData
+          : prodsData?.data || prodsData?.body || [];
+
         setCategories(categoriesList);
-
-        const productList = Array.isArray(prodsData) ? prodsData : (prodsData?.data || prodsData?.body || []);
         setProducts(productList);
-
       } catch (err) {
         console.error("Error cargando carta:", err);
         setError(err);
@@ -40,15 +45,19 @@ export const LetterPage = () => {
     fetchData();
   }, []);
 
+  // ✅ AGREGAR AL CARRITO (NORMALIZADO)
   const handleOrder = (product) => {
-    console.log("Añadir al carrito:", product.idProduct);
-    addToCart(product);
+    addToCart({
+      ...product,
+      price: Number(product.price) || 0, // 🔒 blindaje extra
+    });
   };
 
+  // Scroll suave a categoría
   const scrollToCategory = (catId) => {
     const section = document.getElementById(`cat-${catId}`);
     if (section) {
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
@@ -60,9 +69,9 @@ export const LetterPage = () => {
           subtitle="Explora nuestra selección de cafés y postres artesanales"
         />
 
-        <CategoryNav 
-          categories={categories} 
-          onSelectCategory={scrollToCategory} 
+        <CategoryNav
+          categories={categories}
+          onSelectCategory={scrollToCategory}
         />
 
         {loading ? (
@@ -73,19 +82,26 @@ export const LetterPage = () => {
           </div>
         ) : error ? (
           <div className="text-center py-20 text-red-500">
-            <p>Ups, hubo un problema al cargar el menú. Por favor recarga la página.</p>
+            <p>
+              Ups, hubo un problema al cargar el menú. Por favor recarga la
+              página.
+            </p>
           </div>
         ) : (
           <div className="space-y-16 pb-10">
             {categories.map((category) => {
-              const categoryProducts = products.filter(p => {
-                const pCatId = p.categoryId || p.CategoryId || p.Category_idCategory || p.idCategory;
+              const categoryProducts = products.filter((p) => {
+                const pCatId =
+                  p.categoryId ||
+                  p.CategoryId ||
+                  p.Category_idCategory ||
+                  p.idCategory;
                 return pCatId === category.idCategory;
               });
 
               return (
-                <section 
-                  key={category.idCategory} 
+                <section
+                  key={category.idCategory}
                   id={`cat-${category.idCategory}`}
                   className="scroll-mt-40"
                 >
@@ -96,7 +112,10 @@ export const LetterPage = () => {
                   </div>
 
                   {categoryProducts.length > 0 ? (
-                    <ProductGrid products={categoryProducts} onOrder={handleOrder} />
+                    <ProductGrid
+                      products={categoryProducts}
+                      onOrder={handleOrder}
+                    />
                   ) : (
                     <div className="w-full py-12 bg-[#FFFAD3]/50 border-2 border-dashed border-[#d6c394] rounded-2xl flex flex-col items-center justify-center text-center p-6">
                       <span className="text-4xl mb-2">👨‍🍳✨</span>
@@ -104,7 +123,9 @@ export const LetterPage = () => {
                         ¡Estamos preparando algo especial!
                       </h3>
                       <p className="text-[#432a0c]/80 max-w-md mt-1">
-                        Aún no hemos agregado productos a la sección de <strong>{category.name}</strong>, pero pronto estarán disponibles. ¡Vuelve pronto!
+                        Aún no hemos agregado productos a la sección de{" "}
+                        <strong>{category.name}</strong>, pero pronto estarán
+                        disponibles. ¡Vuelve pronto!
                       </p>
                     </div>
                   )}
