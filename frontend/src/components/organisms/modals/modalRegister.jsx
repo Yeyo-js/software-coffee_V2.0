@@ -3,6 +3,7 @@ import { Title } from "../../atoms/titles"
 import { Button } from "../../atoms/buttons"
 import { FormItem } from "../../molecules/formItem"
 import { ClientValidator } from "../../../validations/validationCredentials"
+import { apiFetch } from "../../../helpers/apiFetch"
 
 function ModalRegister({ setRegisterIsOpen }) {
 
@@ -114,10 +115,10 @@ function ModalRegister({ setRegisterIsOpen }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setError('') // Limpiar errores previos
 
     try {
       // 1. Validar datos
-      console.log('Validando datos...')
       await ClientValidator.validateAsync({
         firstName,
         lastName,
@@ -129,44 +130,36 @@ function ModalRegister({ setRegisterIsOpen }) {
         password,
         repassword,
       })
-      console.log('Validación exitosa')
 
-      // 2. Hacer petición
+      // 2. Hacer petición 
       console.log('Enviando petición...')
-      const request = await fetch(`http://localhost:3000/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          phone,
-          birthdate,
-          gender,
-          address,
-          password,
-          repassword,
-        })
+      const response = await apiFetch('/register', 'POST', {
+        firstName,
+        lastName,
+        email,
+        phone,
+        birthdate,
+        gender,
+        address,
+        password,
+        repassword,
       })
 
-      console.log('Status:', request.status)
-
-      if (!request.ok) {
-        // Intenta obtener más detalles del error
-        const errorData = await request.json().catch(() => ({}))
-        console.error('Error del servidor:', errorData)
-        throw new Error(errorData.message || 'Error al registrar')
+      // 3. Manejar la respuesta
+      if (response) {
+        console.log('Respuesta:', response)
+        alert(response.message || 'Registro exitoso')
+        handleClose() 
+      } else {
+        throw new Error('Error al registrar. Intenta de nuevo.')
       }
-
-      const response = await request.json()
-      console.log('Respuesta:', response)
-      alert(response.message)
 
     } catch (error) {
       console.error('Error completo:', error)
-      setError(error.message)
+      setError(error.message || 'Ocurrió un error al registrar')
     }
   }
+
   return (
     <div
       className={`fixed inset-0 bg-black/50 z-998 transition-opacity ${closing ? 'opacity-0' : 'opacity-100'}`}

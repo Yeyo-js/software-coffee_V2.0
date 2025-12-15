@@ -47,15 +47,12 @@ const ClientValidator = Joi.object({
   phone: Joi
     .string()
     .required()
-    .min(9)
-    .max(20)
     .pattern(/^[0-9]{9}$/)
     .messages({
-      'string.base': 'El télefono de ser una cadena de caracteres',
-      'string.empty': 'El télefono no puede estar vacio',
-      'string.min': 'El télefono debe contener minimo 9 caracteres',
-      'string.max': 'El télefono solo puede contener máximo 9 caracteres',
-      'any.required': 'El télefono es requerido'
+      'string.base': 'El teléfono debe ser una cadena de caracteres',
+      'string.empty': 'El teléfono no puede estar vacío',
+      'string.pattern.base': 'El teléfono debe contener exactamente 9 dígitos',
+      'any.required': 'El teléfono es requerido'
     }),
   birthdate: Joi
     .date()
@@ -109,4 +106,4 @@ const ClientValidator = Joi.object({
 
 })
 
-export {ClientValidator}
+export { ClientValidator }

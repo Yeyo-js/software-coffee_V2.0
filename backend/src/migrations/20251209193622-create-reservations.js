@@ -18,7 +18,7 @@ module.exports = {
         allowNull: false
       },
       phone: {
-        type: Sequelize.DATE,
+        type: Sequelize.STRING(20),
         allowNull: false
       },
       numberPeople: {
@@ -42,7 +42,7 @@ module.exports = {
         allowNull: false
       },
       message: {
-        type: Sequelize.INTEGER(200),
+        type: Sequelize.STRING(200),
         allowNull: false
       },
       state: {

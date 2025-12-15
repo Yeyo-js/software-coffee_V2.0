@@ -1,8 +1,10 @@
 import { useState } from "react"
 import { Title } from "../../atoms/titles"
 import { FormItem } from "../../molecules/formItem"
-import { Buttons } from "../../molecules/booking/buttonsForm";
-import { Description } from "./descriptionForm";
+import { Buttons } from "../../molecules/booking/buttonsForm"
+import { Description } from "./descriptionForm"
+import { reservationsValidate } from "../../../validations/validationsReserve"
+import { apiFetch } from "../../../helpers/apiFetch"
 
 function Form() {
   const [clientName, setClinentName] = useState('')
@@ -14,10 +16,12 @@ function Form() {
   const [reason, setReason] = useState('')
   const [specialRequeriment, setSpecialRequeriment] = useState('')
   const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
 
-  
-  const title = 'Reserva tu mesa y disfruta de una experiencia cómoda, sin espera. Nuestro equipo estará listo para recibirte.'
-  
+  const title =
+    'Reserva tu mesa y disfruta de una experiencia cómoda, sin espera. Nuestro equipo estará listo para recibirte.'
+
   const formFields = [
     {
       text: 'Nombre',
@@ -35,7 +39,6 @@ function Form() {
       type: 'email',
       onChange: (e) => setEmail(e.target.value)
     },
-
     [
       {
         text: 'Celular',
@@ -46,7 +49,7 @@ function Form() {
         onChange: (e) => setPhone(e.target.value)
       },
       {
-        text: 'Nª Personas',
+        text: 'N° Personas',
         htmlFor: 'peoples',
         name: 'peoples',
         value: numberPeople,
@@ -54,7 +57,6 @@ function Form() {
         onChange: (e) => setNumberPeople(e.target.value)
       }
     ],
-
     [
       {
         text: 'Fecha de la Reserva',
@@ -62,7 +64,7 @@ function Form() {
         name: 'date',
         value: reservationDate,
         type: 'date',
-        onChange: (e) => setReservationDate (e.target.value)
+        onChange: (e) => setReservationDate(e.target.value)
       },
       {
         text: 'Hora de la reserva',
@@ -73,7 +75,6 @@ function Form() {
         onChange: (e) => setReservationTime(e.target.value)
       }
     ],
-
     [
       {
         text: 'Motivo',
@@ -84,10 +85,10 @@ function Form() {
         onChange: (e) => setReason(e.target.value),
         options: [
           { text: 'Seleccionar...', value: '' },
-          { text: 'Cumpleaños', value: 'cumpleanos' },
-          { text: 'Aniversario', value: 'aniversario' },
-          { text: 'Negocio', value: 'negocio' },
-          { text: 'Casual', value: 'casual' }
+          { text: 'Cumpleaños', value: 'Cumpleaños' },
+          { text: 'Aniversario', value: 'Aniversario' },
+          { text: 'Negocios', value: 'Negocios' },
+          { text: 'Casual', value: 'Casual' }
         ]
       },
       {
@@ -105,51 +106,92 @@ function Form() {
         ]
       }
     ],
-
     {
       text: 'Mensaje',
       htmlFor: 'message',
       name: 'message',
-      value:message,
+      value: message,
       type: 'text',
       onChange: (e) => setMessage(e.target.value)
     }
-  ];
+  ]
 
-  
-  const handleSubmit = () => {
-    console.log('Datos del formulario:', data);
-    alert('Reserva enviada con éxito!');
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError('')
+    setSuccess('')
+
+    try {
+      //  Validación
+      await reservationsValidate.validateAsync({
+        clientName,
+        email,
+        phone,
+        numberPeople,
+        reservationDate,
+        reservationTime,
+        reason,
+        specialRequeriment,
+        message
+      })
+
+      // Envío
+      const data = await apiFetch('/reservations', 'POST', {
+        clientName,
+        email,
+        phone,
+        numberPeople,
+        reservationDate,
+        reservationTime,
+        reason,
+        specialRequeriment,
+        message
+      })
+
+      setSuccess(data.message || 'Reserva realizada con éxito 🎉')
+      setClinentName('')
+      setEmail('')
+      setPhone('')
+      setNumberPeople('')
+      setReservationDate('')
+      setReservationTime('')
+      setReason('')
+      setSpecialRequeriment('')
+      setMessage('')
+
+    } catch (error) {
+      console.error(error)
+      setError(error.message || 'Ocurrió un error al reservar')
+    }
+  }
+
   return (
     <div className="flex flex-col gap-10 items-center mt-10 mb-10 z-[-1]">
+      <Title level="h3" weight="bold" text={title} align="center" />
 
-      <Title
-        level="h3"
-        weight="bold"
-        text={title}
-        align="center"
-      />
+      {error && <span className="text-red-500 text-sm">{error}</span>}
+      {success && <span className="text-green-600 text-sm">{success}</span>}
 
-      <form className="relative flex flex-col gap-6 p-6 sm:p-10 bg-[#F7F7F7] w-[95%] sm:w-[85%] lg:w-[80%] mx-auto shadow shadow-black rounded">
-
+      <form
+        onSubmit={handleSubmit}
+        className="relative flex flex-col gap-6 p-6 sm:p-10 bg-[#F7F7F7] w-[95%] sm:w-[85%] lg:w-[80%] mx-auto shadow shadow-black rounded"
+      >
         <Title
           level="h2"
-          text={'Reserva ¡Aquí!'}
+          text="Reserva ¡Aquí!"
           align="center"
           weight="bold"
         />
+
         <img
           src="/IMG-RESERVS.png"
           alt="imagen de cafés"
           className="absolute w-25 sm:w-40 lg:w-60 top-2 right-2 animate-pulse"
         />
-        <FormItem 
-          inputVariant="secondary"
-          formFields={formFields}
-        />
-        <Buttons handleSubmit={handleSubmit} />
-        <Description/>
+
+        <FormItem inputVariant="secondary" formFields={formFields} />
+        <Buttons />
+        <Description />
       </form>
     </div>
   )

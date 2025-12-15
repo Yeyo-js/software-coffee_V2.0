@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     phone: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING(20),
       allowNull: false
     },
     numberPeople: {
@@ -53,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     message: {
-      type: DataTypes.INTEGER(200),
+      type: DataTypes.STRING(200),
       allowNull: false
     },
     state: {

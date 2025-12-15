@@ -1,7 +1,6 @@
 /* eslint-disable no-undef */
 const dotenv = require('dotenv')
 const express = require('express')
-const cookieParser = require('cookie-parser')
 const { sequelize } = require('./models')
 // Respetamos el middleware global de tu equipo
 const { globalMiddlewares } = require('./middlewares/globalMiddlewares')
@@ -14,7 +13,7 @@ const productRoutes = require('./routes/product.routes')
 const categoryRoutes = require('./routes/category.routes')
 const orderRoutes = require('./routes/order.routes')
 const contactMessageRoutes = require('./routes/contactMessage.routes')
-const reservationRoutes = require('./routes/reservation.routes')
+const {reserveRouter} = require('./routes/reservation.routes')
 const promotionRoutes = require('./routes/promotion.routes')
 
 dotenv.config()
@@ -37,7 +36,7 @@ server.use('/products', productRoutes)
 server.use('/categories', categoryRoutes)
 server.use('/orders', orderRoutes)
 server.use('/contact', contactMessageRoutes)
-server.use('/reservations', reservationRoutes)
+server.use('/reservations', reserveRouter)
 server.use('/promotions', promotionRoutes)
 
 // 4. Ruta de prueba (Health Check)

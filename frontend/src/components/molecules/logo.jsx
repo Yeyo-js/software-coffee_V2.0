@@ -20,6 +20,7 @@ function Logo({variant = 'secondary', className= '' }) {
             level="h3"
             variant="secondary"
             weight="bold"
+            align="center"
             />
         </Link>
     )

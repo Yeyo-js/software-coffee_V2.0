@@ -13,10 +13,6 @@ class ReservationService {
     return reservation;
   }
 
-  async create(reservationData) {
-    return await reservationRepository.create(reservationData);
-  }
-
   async updateStatus(id, status) {
     await this.findOne(id); // Ensure it exists
     await reservationRepository.update(id, { status });

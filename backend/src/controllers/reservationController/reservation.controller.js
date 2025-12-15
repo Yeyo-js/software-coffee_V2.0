@@ -1,4 +1,4 @@
-const reservationService = require('../services/reservation.service');
+const reservationService = require('../../services/reservation.service');
 
 const getAll = async (req, res) => {
   try {
@@ -18,16 +18,6 @@ const getById = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 };
-
-const create = async (req, res) => {
-  try {
-    const newReservation = await reservationService.create(req.body);
-    res.status(201).json(newReservation);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
 const updateStatus = async (req, res) => {
   try {
     const { id } = req.params;
@@ -52,7 +42,6 @@ const deleteOne = async (req, res) => {
 module.exports = {
   getAll,
   getById,
-  create,
   updateStatus,
   deleteOne,
 };

@@ -1,7 +1,7 @@
 import { Button } from "../../atoms/buttons"
 import { Link } from "../../atoms/links"
 
-function Buttons({ handleSubmit }) {
+function Buttons() {
   return (
     <div
       className="
@@ -18,7 +18,6 @@ function Buttons({ handleSubmit }) {
         variant="secondary"
         text={'Reservar'}
         type='submit'
-        onClick={handleSubmit}
         className="font-semibold "
 
       />
