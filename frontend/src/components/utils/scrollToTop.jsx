@@ -1,17 +1,38 @@
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const prevPathRef = useRef(location.pathname);
 
   useEffect(() => {
-    // Scroll suave al inicio cuando cambia la ruta
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'smooth' // Scroll suave y animado
-    });
-  }, [pathname]);
+    const currentPath = location.pathname;
+    const prevPath = prevPathRef.current;
+
+    // 🔹 Rutas que NO deben hacer scroll (Home + secciones)
+    const isHomeSection =
+      currentPath === "/" ||
+      currentPath === "/coffee" ||
+      currentPath === "/cookies" ||
+      currentPath === "/cakes";
+
+    const wasHomeSection =
+      prevPath === "/" ||
+      prevPath === "/coffee" ||
+      prevPath === "/cookies" ||
+      prevPath === "/cakes";
+
+    // 👉 Solo hacer scroll si SALES del Home o ENTRAS al Home
+    if (!(isHomeSection && wasHomeSection)) {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth",
+      });
+    }
+
+    prevPathRef.current = currentPath;
+  }, [location.pathname]);
 
   return null;
 }

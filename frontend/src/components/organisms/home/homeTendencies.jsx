@@ -39,6 +39,7 @@ function Tendencies() {
             <li key={i}>
               <NavLink
                 to={item.href}
+                replace
                 className={({ isActive }) =>
                   `py-1.5 sm:py-2 px-3 sm:px-4 md:px-2 rounded transition-all duration-300 text-sm sm:text-base ${isActive
                     ? 'bg-[#A66A06] text-white font-semibold'
